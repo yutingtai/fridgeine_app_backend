@@ -1,0 +1,8 @@
+.env
+.idea
+/venv
+credentials.json
+token.json
+**/__pychche__/
+pyvenv.cfg
+db.sqlite3
