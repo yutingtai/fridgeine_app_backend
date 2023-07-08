@@ -3,6 +3,6 @@
 /venv
 credentials.json
 token.json
-**/__pychche__/
+**/__pycache__/
 pyvenv.cfg
 db.sqlite3

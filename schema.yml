@@ -1,0 +1,416 @@
+openapi: 3.0.3
+info:
+  title: ''
+  version: 0.0.0
+paths:
+  /api/schema/:
+    get:
+      operationId: api_schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - ckb
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - ms
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /fridge/:
+    post:
+      operationId: fridge_create
+      tags:
+      - fridge
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngredientDbModel'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/IngredientDbModel'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/IngredientDbModel'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDbModel'
+          description: ''
+  /fridge/{fridge_id}/:
+    get:
+      operationId: fridge_retrieve
+      description: Get and create the ingredients in the fridge.
+      parameters:
+      - in: path
+        name: fridge_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - fridge
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngredientDbModel'
+          description: ''
+  /fridge/{fridge_id}/ingredient/:
+    post:
+      operationId: fridge_ingredient_create
+      parameters:
+      - in: path
+        name: fridge_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - fridge
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngredientDbModel'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/IngredientDbModel'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/IngredientDbModel'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngredientDbModel'
+          description: ''
+  /fridge/{fridge_id}/ingredient/{id}:
+    get:
+      operationId: fridge_ingredient_retrieve
+      parameters:
+      - in: path
+        name: fridge_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - fridge
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngredientDbModel'
+          description: ''
+    put:
+      operationId: fridge_ingredient_update
+      parameters:
+      - in: path
+        name: fridge_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - fridge
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngredientDbModel'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/IngredientDbModel'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/IngredientDbModel'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngredientDbModel'
+          description: ''
+    delete:
+      operationId: fridge_ingredient_destroy
+      parameters:
+      - in: path
+        name: fridge_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - fridge
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /fridge/{fridge_id}/recipe/:
+    post:
+      operationId: fridge_recipe_create
+      parameters:
+      - in: path
+        name: fridge_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - fridge
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecipeDetail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RecipeDetail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RecipeDetail'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeDetail'
+          description: ''
+components:
+  schemas:
+    IngredientDbModel:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 30
+        category:
+          type: string
+          nullable: true
+        amount:
+          type: number
+          format: double
+        pic_url:
+          type: string
+          maxLength: 100
+        create_date:
+          type: string
+          format: date
+        expiry_date:
+          type: string
+          format: date
+        pk:
+          type: integer
+          readOnly: true
+          title: ID
+      required:
+      - name
+      - pic_url
+      - pk
+    RecipeDetail:
+      type: object
+      properties:
+        ingredients:
+          type: string
+          maxLength: 100
+      required:
+      - ingredients
+    UserDbModel:
+      type: object
+      properties:
+        pk:
+          type: integer
+          readOnly: true
+          title: ID
+        fridge_db_model:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - pk
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
