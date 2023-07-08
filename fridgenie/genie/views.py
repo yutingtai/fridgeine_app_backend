@@ -5,7 +5,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
-from .serializer import IngredientDbModelSerializer, UserDbModelSerializer, RecipeDetailSerializer
+from .serializer import IngredientDbModelSerializer, UserDbModelSerializer, RecipeDetailSerializer, \
+    RecipeRecommendationRequireDate
 import requests
 import json
 import re
@@ -23,7 +24,7 @@ class FridgeDetail(APIView):
     def get_serializer_class(self):
         return IngredientDbModelSerializer
 
-    @extend_schema(responses=IngredientDbModelSerializer)
+    @extend_schema(responses=IngredientDbModelSerializer(many=True))
     def get(self, request, fridge_id, format=None):
         fridge_model: FridgeDbModel = FridgeDbModel.objects.get(pk=fridge_id)
         ingredients = fridge_model.ingredientdbmodel_set.all()
@@ -78,8 +79,8 @@ class IngredientDetail(APIView):
 
 
 class NewFridge(APIView):
-    def get_serializer_class(self):
-        return IngredientDbModelSerializer
+    # def get_serializer_class(self):
+    #     return UserDbModelSerializer
 
     @extend_schema(responses=UserDbModelSerializer)
     def post(self, request, format=None):
@@ -95,16 +96,15 @@ class RecipeDetail(APIView):
     def get_serializer_class(self):
         return RecipeDetailSerializer
 
-    @extend_schema(responses=RecipeDetailSerializer)
+    @extend_schema(request=RecipeRecommendationRequireDate, responses=RecipeDetailSerializer(many=True))
     def post(self, request, fridge_id):
         some_names_of_recipe = self.get_the_name_of_recipe(request.data)
         a_lot_of_recipe = self.get_the_recipe_from_the_name(some_names_of_recipe)
         return a_lot_of_recipe
 
-    def get_the_name_of_recipe(self, ingredients: List):
+    def get_the_name_of_recipe(self, ingredients):
         headers = {"Content-Type": "application/json"}
-        ingredients_from_user = ','.join(ingredients)
-        content = "Recommend me some dishes that I might be able to cook base on what ingredients I have in the fridge. The format follows the example below: I have banana, eggs, spinach, spaghetti. Your reply:Banana pancake, Spinach and Egg Scramble, Spinach and Banana Smoothie, Spaghetti with Spinach and Eggs.Please only reply the name of dishes without cooking instruction in one line that separated by comma. I have " + ingredients_from_user
+        content = "Recommend me some dishes that I might be able to cook base on what ingredients I have in the fridge. The format follows the example below: I have banana, eggs, spinach, spaghetti. Your reply:Banana pancake, Spinach and Egg Scramble, Spinach and Banana Smoothie, Spaghetti with Spinach and Eggs.Please only reply the name of dishes without cooking instruction in one line that separated by comma. I have " + ingredients
         data = json.dumps({
             "model": "text-davinci-003",
             "prompt": f"{content}",

@@ -15,7 +15,7 @@ class IngredientDbModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = IngredientDbModel
-        fields = ['name', 'category', 'amount', 'pic_url', 'create_date', 'expiry_date', 'fridge_id']
+        fields = ['name', 'category', 'amount', 'pic_url', 'create_date', 'expiry_date', 'fridge_id', 'pk']
 
 
 class UserDbModelSerializer(serializers.ModelSerializer):
@@ -31,4 +31,12 @@ class FridgeDbModelSerializer(serializers.ModelSerializer):
 
 
 class RecipeDetailSerializer(serializers.Serializer):
-    ingredients = serializers.CharField(max_length=100)
+    a_lot_of_recipe = serializers.CharField(max_length=100)
+    name = serializers.CharField(max_length=100)
+    image = serializers.CharField(max_length=200)
+    url = serializers.CharField(max_length=200)
+    ingredients = serializers.CharField(max_length=500)
+
+
+class RecipeRecommendationRequireDate(serializers.Serializer):
+    ingredients = serializers.CharField()
