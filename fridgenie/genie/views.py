@@ -98,7 +98,7 @@ class RecipeDetail(APIView):
 
     @extend_schema(request=RecipeRecommendationRequireDate, responses=RecipeDetailSerializer(many=True))
     def post(self, request, fridge_id):
-        some_names_of_recipe = self.get_the_name_of_recipe(request.data)
+        some_names_of_recipe = self.get_the_name_of_recipe(request.data["ingredients"])
         a_lot_of_recipe = self.get_the_recipe_from_the_name(some_names_of_recipe)
         return a_lot_of_recipe
 

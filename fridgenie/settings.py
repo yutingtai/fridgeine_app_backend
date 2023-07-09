@@ -14,7 +14,9 @@ from pathlib import Path
 from dotenv import load_dotenv, find_dotenv
 import os
 
+import ssl
 
+ssl._create_default_https_context = ssl._create_unverified_context
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

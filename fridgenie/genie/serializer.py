@@ -31,7 +31,6 @@ class FridgeDbModelSerializer(serializers.ModelSerializer):
 
 
 class RecipeDetailSerializer(serializers.Serializer):
-    a_lot_of_recipe = serializers.CharField(max_length=100)
     name = serializers.CharField(max_length=100)
     image = serializers.CharField(max_length=200)
     url = serializers.CharField(max_length=200)

@@ -1,4 +1,5 @@
 from django.test import TestCase
+from unittest.mock import patch, MagicMock
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
@@ -138,17 +139,66 @@ class FailIngredientCreateTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
+def create_response(code, json_body):
+    response = MagicMock()
+    response.json = MagicMock(return_value=json_body)
+    response.status_code = code
+    return response
+
+
+def side_effect_200_chat_gpt(*args, **kwargs):
+    return create_response(
+        json_body={
+            "choices": [
+                {
+                    "text": "\n\nPineapple Fried Rice, Green Onion and Pepper Omelette, Pineapple and Spinach Smoothie, Spinach and Pineapple Salad.",
+                    "index": 0,
+                    "logprobs": "null",
+                    "finish_reason": "stop"
+                }
+            ],
+        },
+        code=200
+    )
+
+
+def create_one_recipe():
+    return {
+        "recipe": {
+            "url": "mock_url",
+            "image": "mock_image",
+            "label": "mock_name",
+            "ingredientLines": "mock_ingredients"
+        }
+    }
+
+
+def side_effect_200_recipe_website_api(*args, **kwargs):
+    recipe_mock_data = [create_one_recipe() for _ in range(20)]
+
+    return create_response(
+        json_body={
+            "hits": recipe_mock_data,
+        },
+        code=200
+    )
+
+
 class GetRecipeRecommendation(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.fridge = FridgeDbModel()
         self.fridge.save()
 
-    def test_get_the_recipe(self):
+    @patch('fridgenie.genie.views.requests.get', side_effect=side_effect_200_recipe_website_api)
+    @patch('fridgenie.genie.views.requests.post', side_effect=side_effect_200_chat_gpt)
+    def test_get_the_recipe(self, mock_post: MagicMock, mock_get: MagicMock):
         fridge_id = self.fridge.fridge_id
         url = reverse('Recipe_recommendation', kwargs={'fridge_id': fridge_id})
         data = {
-            "ingredients": "['pineapple', 'green onion', 'pepper, spinach']"
+            "ingredients": "pineapple, green onion, pepper, spinach"
         }
-        response = self.client.post(url, data=data)
+        response = self.client.post(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        mock_post.assert_called_once()
+        self.assertEqual(response.data[0]['url'], 'mock_url')
